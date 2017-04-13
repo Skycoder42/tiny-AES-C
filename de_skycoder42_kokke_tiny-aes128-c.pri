@@ -1,4 +1,4 @@
-HEADERS += $$PWD/tiny-AES128-C/aes.h
-SOURCES += $$PWD/tiny-AES128-C/aes.c
+HEADERS += $$PWD/aes.h
+SOURCES += $$PWD/aes.c
 
 INCLUDEPATH += $$PWD
