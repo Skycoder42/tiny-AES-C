@@ -5,18 +5,18 @@
     },
     "dependencies": [
     ],
-    "description": "Small portable AES128/192/256 in C from kokke/tiny-AES128-C with qpm",
+    "description": "Small portable AES128/192/256 in C from kokke/tiny-AES-C with qpm",
     "license": "UNLICENSE",
-    "name": "de.skycoder42.kokke.tiny-aes128-c",
-    "pri_filename": "de_skycoder42_kokke_tiny-aes128-c.pri",
+    "name": "de.skycoder42.kokke.tiny-aes-c",
+    "pri_filename": "de_skycoder42_kokke_tiny-aes-c.pri",
     "repository": {
         "type": "GITHUB",
-        "url": "https://github.com/Skycoder42/tiny-AES128-C.git"
+        "url": "https://github.com/Skycoder42/tiny-AES-C.git"
     },
     "version": {
         "fingerprint": "",
-        "label": "3.0.1",
+        "label": "3.0.2",
         "revision": ""
     },
-    "webpage": "https://github.com/kokke/tiny-AES128-C"
+    "webpage": "https://github.com/kokke/tiny-AES-C"
 }

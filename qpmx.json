@@ -6,7 +6,7 @@
         "name": "UNLICENSE"
     },
     "prcFile": "",
-    "priFile": "de_skycoder42_kokke_tiny-aes128-c.pri",
+    "priFile": "de_skycoder42_kokke_tiny-aes-c.pri",
     "priIncludes": [
     ],
     "publishers": {
@@ -15,13 +15,13 @@
                 "email": "skycoder42.de@gmx.de",
                 "name": "Skycoder"
             },
-            "description": "Small portable AES128/192/256 in C from kokke/tiny-AES128-C with qpm",
-            "name": "de.skycoder42.kokke.tiny-aes128-c",
+            "description": "Small portable AES128/192/256 in C from kokke/tiny-AES-C with qpm",
+            "name": "de.skycoder42.kokke.tiny-aes-c",
             "repository": {
                 "type": "GITHUB",
-                "url": "https://github.com/Skycoder42/tiny-AES128-C.git"
+                "url": "https://github.com/Skycoder42/tiny-AES-C.git"
             },
-            "webpage": "https://github.com/kokke/tiny-AES128-C"
+            "webpage": "https://github.com/kokke/tiny-AES-C"
         }
     },
     "source": false
