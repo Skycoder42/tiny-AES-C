@@ -182,11 +182,11 @@ static void KeyExpansion(uint8_t* RoundKey, const uint8_t* Key)
 
       // Function RotWord()
       {
-        k = tempa[0];
+        const uint8_t u8tmp = tempa[0];
         tempa[0] = tempa[1];
         tempa[1] = tempa[2];
         tempa[2] = tempa[3];
-        tempa[3] = k;
+        tempa[3] = u8tmp;
       }
 
       // SubWord() is a function that takes a four-byte input word and 
@@ -226,7 +226,7 @@ void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key)
 {
   KeyExpansion(ctx->RoundKey, key);
 }
-#if defined(CBC) && (CBC == 1)
+#if (defined(CBC) && (CBC == 1)) || (defined(CTR) && (CTR == 1))
 void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv)
 {
   KeyExpansion(ctx->RoundKey, key);
@@ -319,6 +319,9 @@ static void MixColumns(state_t* state)
 }
 
 // Multiply is used to multiply numbers in the field GF(2^8)
+// Note: The last call to xtime() is unneeded, but often ends up generating a smaller binary
+//       The compiler seems to be able to vectorize the operation better this way.
+//       See https://github.com/kokke/tiny-AES-c/pull/34
 #if MULTIPLY_AS_A_FUNCTION
 static uint8_t Multiply(uint8_t x, uint8_t y)
 {
@@ -326,7 +329,7 @@ static uint8_t Multiply(uint8_t x, uint8_t y)
        ((y>>1 & 1) * xtime(x)) ^
        ((y>>2 & 1) * xtime(xtime(x))) ^
        ((y>>3 & 1) * xtime(xtime(xtime(x)))) ^
-       ((y>>4 & 1) * xtime(xtime(xtime(xtime(x))))));
+       ((y>>4 & 1) * xtime(xtime(xtime(xtime(x)))))); /* this last call to xtime() can be omitted */
   }
 #else
 #define Multiply(x, y)                                \
@@ -429,6 +432,7 @@ static void Cipher(state_t* state, uint8_t* RoundKey)
   AddRoundKey(Nr, state, RoundKey);
 }
 
+#if (defined(CBC) && CBC == 1) || (defined(ECB) && ECB == 1)
 static void InvCipher(state_t* state,uint8_t* RoundKey)
 {
   uint8_t round = 0;
@@ -453,7 +457,7 @@ static void InvCipher(state_t* state,uint8_t* RoundKey)
   InvSubBytes(state);
   AddRoundKey(0, state, RoundKey);
 }
-
+#endif // #if (defined(CBC) && CBC == 1) || (defined(ECB) && ECB == 1)
 
 /*****************************************************************************/
 /* Public functions:                                                         */
@@ -461,13 +465,13 @@ static void InvCipher(state_t* state,uint8_t* RoundKey)
 #if defined(ECB) && (ECB == 1)
 
 
-void AES_ECB_encrypt(struct AES_ctx *ctx,const uint8_t* buf)
+void AES_ECB_encrypt(struct AES_ctx *ctx, uint8_t* buf)
 {
   // The next function call encrypts the PlainText with the Key using AES algorithm.
   Cipher((state_t*)buf, ctx->RoundKey);
 }
 
-void AES_ECB_decrypt(struct AES_ctx* ctx,const uint8_t* buf)
+void AES_ECB_decrypt(struct AES_ctx* ctx, uint8_t* buf)
 {
   // The next function call decrypts the PlainText with the Key using AES algorithm.
   InvCipher((state_t*)buf, ctx->RoundKey);

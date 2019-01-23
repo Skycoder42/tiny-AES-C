@@ -8,34 +8,36 @@ The API is very simple and looks like this (I am using C99 `<stdint.h>`-style an
 
 ```C
 /* Initialize context calling one of: */
-void AES_init_ctx(struct AES_ctx *ctx,const uint8_t* key);
-void AES_init_ctx_iv(struct AES_ctx *ctx,const uint8_t* key,const uint8_t* iv);
+void AES_init_ctx(struct AES_ctx* ctx, const uint8_t* key);
+void AES_init_ctx_iv(struct AES_ctx* ctx, const uint8_t* key, const uint8_t* iv);
 
 /* ... or reset IV at random point: */
-void AES_ctx_set_iv(struct AES_ctx *ctx,const uint8_t* iv);
+void AES_ctx_set_iv(struct AES_ctx* ctx, const uint8_t* iv);
 
 /* Then start encrypting and decrypting with the functions below: */
-void AES_ECB_encrypt(struct AES_ctx *ctx, const uint8_t* buf);
-void AES_ECB_decrypt(struct AES_ctx *ctx, const uint8_t* buf);
+void AES_ECB_encrypt(struct AES_ctx* ctx, uint8_t* buf);
+void AES_ECB_decrypt(struct AES_ctx* ctx, uint8_t* buf);
 
-void AES_CBC_encrypt_buffer(struct AES_ctx *ctx, uint8_t* buf, uint32_t length);
-void AES_CBC_decrypt_buffer(struct AES_ctx *ctx, uint8_t* buf, uint32_t length);
+void AES_CBC_encrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length);
+void AES_CBC_decrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length);
 
 /* Same function for encrypting as for decrypting in CTR mode */
 void AES_CTR_xcrypt_buffer(struct AES_ctx* ctx, uint8_t* buf, uint32_t length);
 ```
 
 Note: 
- * No padding is provided so all buffers should be mutiples of 16 bytes. For padding [PKCS7](https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7) is recommendable.
+ * No padding is provided so for CBC and ECB all buffers should be multiples of 16 bytes. For padding [PKCS7](https://en.wikipedia.org/wiki/Padding_(cryptography)#PKCS7) is recommendable.
  * ECB mode is considered unsafe for most uses and is not implemented in streaming mode. If you need this mode, call the function for every block of 16 bytes you need encrypted. See [wikipedia's article on ECB](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_Codebook_(ECB)) for more details.
 
 You can choose to use any or all of the modes-of-operations, by defining the symbols CBC, CTR or ECB. See the header file for clarification.
+
+C++ users should `#include` [aes.hpp](https://github.com/kokke/tiny-AES-c/blob/master/aes.hpp) instead of [aes.h](https://github.com/kokke/tiny-AES-c/blob/master/aes.h)
 
 There is no built-in error checking or protection from out-of-bounds memory access errors as a result of malicious input.
 
 The module uses less than 200 bytes of RAM and 1-2K ROM when compiled for ARM, but YMMV depending on which modes are enabled.
 
-It is one of the smallest implementation in C I've seen yet, but do contact me if you know of something smaller (or have improvements to the code here). 
+It is one of the smallest implementations in C I've seen yet, but do contact me if you know of something smaller (or have improvements to the code here). 
 
 I've successfully used the code on 64bit x86, 32bit ARM and 8 bit AVR platforms.
 
